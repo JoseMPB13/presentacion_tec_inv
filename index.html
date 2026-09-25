@@ -2265,7 +2265,7 @@
       // Remover clase active anterior
       document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
 
-      const targetSlide = document.getElementById(`slide-{slideNum}`);
+      const targetSlide = document.getElementById(`slide-${slideNum}`);
       if (targetSlide) {
         targetSlide.classList.add("active");
         currentSlide = slideNum;
@@ -2276,7 +2276,7 @@
 
     // Actualización de interfaces
     function updateUI() {
-      const currentSlideEl = document.getElementById(`slide-{currentSlide}`);
+      const currentSlideEl = document.getElementById(`slide-${currentSlide}`);
       if (!currentSlideEl) return;
 
       const speaker = currentSlideEl.getAttribute("data-speaker") || "UPDS";
@@ -2286,10 +2286,10 @@
       // Barra superior
       document.getElementById("speakerPillNum").textContent = role;
       document.getElementById("speakerPillName").textContent = speaker;
-      document.getElementById("speakerPillSubtopic").textContent = subtopic ? `• {subtopic}` : "";
+      document.getElementById("speakerPillSubtopic").textContent = subtopic ? `• ${subtopic}` : "";
 
       // Contador inferior
-      document.getElementById("slideCounterDisplay").innerHTML = `Diapositiva <span>{currentSlide}</span> de {TOTAL_SLIDES}`;
+      document.getElementById("slideCounterDisplay").innerHTML = `Diapositiva <span>${currentSlide}</span> de ${TOTAL_SLIDES}`;
 
       // Habilitar/deshabilitar botones de navegación
       document.getElementById("btnPrev").disabled = currentSlide === 1;
@@ -2313,12 +2313,12 @@
     // Renderizar badges de glosario al pie de cada diapositiva
     function renderGlossaryPillsAllSlides() {
       for (let i = 1; i <= TOTAL_SLIDES; i++) {
-        const container = document.getElementById(`glossaryPills-{i}`);
+        const container = document.getElementById(`glossaryPills-${i}`);
         if (container && slideGlossaries[i]) {
           let html = '';
           slideGlossaries[i].forEach(item => {
-            html += `<span class="glossary-term-chip" onclick="openSlideGlossaryModal()" title="{item.easy}">
-              <strong>{item.term}:</strong> {item.easy.substring(0, 48)}...
+            html += `<span class="glossary-term-chip" onclick="openSlideGlossaryModal()" title="${item.easy}">
+              <strong>${item.term}:</strong> {item.easy.substring(0, 48)}...
             </span>`;
           });
           container.innerHTML = html;
@@ -2330,7 +2330,7 @@
     function openSlideGlossaryModal() {
       closeAllModals();
       const modal = document.getElementById("slideGlossaryModalOverlay");
-      document.getElementById("glossarySlideIndicator").textContent = `Diapositiva {currentSlide} de {TOTAL_SLIDES}`;
+      document.getElementById("glossarySlideIndicator").textContent = `Diapositiva ${currentSlide} de ${TOTAL_SLIDES}`;
 
       const list = slideGlossaries[currentSlide] || [];
       let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
@@ -2338,10 +2338,10 @@
         html += `
           <div style="background: var(--bg-card); border: 1px solid var(--border-accent); border-radius: var(--radius-sm); padding: 12px 16px;">
             <div style="font-size: 1rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 4px;">
-              📖 {item.term}
+              📖 ${item.term}
             </div>
             <div style="font-size: 0.9rem; color: #fff; line-height: 1.5;">
-              {item.easy}
+              ${item.easy}
             </div>
           </div>
         `;
@@ -2373,7 +2373,7 @@
     }
 
     function renderNotesModalContent() {
-      document.getElementById("notesSlideIndicator").textContent = `Diapositiva {currentSlide} de {TOTAL_SLIDES}`;
+      document.getElementById("notesSlideIndicator").textContent = `Diapositiva ${currentSlide} de ${TOTAL_SLIDES}`;
       const note = presenterNotes[currentSlide] || {
         speaker: "Equipo UPDS",
         goal: "Presentación general",
@@ -2386,7 +2386,7 @@
       const glossaryList = slideGlossaries[currentSlide] || [];
       let glossaryHtml = '<div style="display: flex; flex-direction: column; gap: 8px;">';
       glossaryList.forEach(item => {
-        glossaryHtml += `<div><strong style="color: #38bdf8;">{item.term}:</strong> {item.easy}</div>`;
+        glossaryHtml += `<div><strong style="color: #38bdf8;">${item.term}:</strong> ${item.easy}</div>`;
       });
       glossaryHtml += '</div>';
 
@@ -2394,32 +2394,32 @@
       body.innerHTML = `
         <div class="note-section">
           <div class="note-section-title goal"><span>🎯</span> Objetivo Pedagógico de la Diapositiva</div>
-          <div class="note-content"><p>{note.goal}</p></div>
+          <div class="note-content"><p>${note.goal}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title script"><span>🗣️</span> Guion Verbal Paso a Paso (Para decir en voz alta)</div>
-          <div class="note-content"><p>{note.script}</p></div>
+          <div class="note-content"><p>${note.script}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title metaphor"><span>💡</span> Para Explicarlo Fácil (Metáfora o Ejemplo)</div>
-          <div class="note-content" style="color: #fde68a;"><p>{note.metaphor}</p></div>
+          <div class="note-content" style="color: #fde68a;"><p>${note.metaphor}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title faq"><span>❓</span> Pregunta Típica del Jurado y Cómo Responder</div>
-          <div class="note-content" style="color: #e9d5ff;"><p>{note.faq}</p></div>
+          <div class="note-content" style="color: #e9d5ff;"><p>${note.faq}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title glossary"><span>📖</span> Palabras Difíciles de esta Lámina Explicadas Fácil</div>
-          <div class="note-content">{glossaryHtml}</div>
+          <div class="note-content">${glossaryHtml}</div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title pass"><span>🤝</span> Frase de Pase al Siguiente Compañero</div>
-          <div class="note-content" style="color: #fecdd3; font-style: italic;"><p>{note.pass}</p></div>
+          <div class="note-content" style="color: #fecdd3; font-style: italic;"><p>${note.pass}</p></div>
         </div>
       `;
     }
@@ -2443,16 +2443,16 @@
       const grid = document.getElementById("overviewGrid");
       let html = '';
       for (let i = 1; i <= TOTAL_SLIDES; i++) {
-        const slideEl = document.getElementById(`slide-{i}`);
+        const slideEl = document.getElementById(`slide-${i}`);
         const titleEl = slideEl ? slideEl.querySelector(".slide-title") : null;
-        const titleText = titleEl ? titleEl.textContent : `Diapositiva {i}`;
+        const titleText = titleEl ? titleEl.textContent : `Diapositiva ${i}`;
         const speaker = slideEl ? slideEl.getAttribute("data-speaker") : "UPDS";
 
         html += `
-          <div class="overview-card {i === currentSlide ? 'current' : ''}" onclick="goToSlide({i}); closeOverviewModal();">
-            <div class="overview-num">DIAPOSITIVA {i}</div>
-            <div class="overview-title">{titleText}</div>
-            <div class="overview-speaker">👤 {speaker}</div>
+          <div class="overview-card {i === currentSlide ? 'current' : ''}" onclick="goToSlide(${i}); closeOverviewModal();">
+            <div class="overview-num">DIAPOSITIVA ${i}</div>
+            <div class="overview-title">${titleText}</div>
+            <div class="overview-speaker">👤 ${speaker}</div>
           </div>
         `;
       }
@@ -2478,7 +2478,7 @@
     // ========================================================
     function initSyncChannel() {
       try {
-        broadcastChannel = new BroadcastChannel(`upds_sync_{roomCode}`);
+        broadcastChannel = new BroadcastChannel(`upds_sync_${roomCode}`);
         broadcastChannel.onmessage = (event) => {
           const data = event.data;
           if (data && data.type === 'NAVIGATE') {
@@ -2488,7 +2488,7 @@
       } catch (e) {}
 
       window.addEventListener("storage", (e) => {
-        if (e.key === `upds_slide_{roomCode}` && e.newValue) {
+        if (e.key === `upds_slide_${roomCode}` && e.newValue) {
           const s = parseInt(e.newValue, 10);
           if (!isNaN(s)) onRemoteNavigate(s);
         }
@@ -2516,7 +2516,7 @@
 
     function broadcastSlideChange(slideNum) {
       try {
-        localStorage.setItem(`upds_slide_{roomCode}`, slideNum.toString());
+        localStorage.setItem(`upds_slide_${roomCode}`, slideNum.toString());
         if (broadcastChannel) {
           broadcastChannel.postMessage({ type: 'NAVIGATE', slide: slideNum });
         }
@@ -2554,12 +2554,12 @@
     }
 
     function renderMobileRemoteView(slideNum) {
-      const slideEl = document.getElementById(`slide-{slideNum}`);
-      const title = slideEl ? slideEl.querySelector(".slide-title").textContent : `Diapositiva {slideNum}`;
+      const slideEl = document.getElementById(`slide-${slideNum}`);
+      const title = slideEl ? slideEl.querySelector(".slide-title").textContent : `Diapositiva ${slideNum}`;
       const speaker = slideEl ? slideEl.getAttribute("data-speaker") : "UPDS";
       const note = presenterNotes[slideNum] || {};
 
-      document.getElementById("mobileSlideNumIndicator").textContent = `DIAPOSITIVA {slideNum} DE {TOTAL_SLIDES}`;
+      document.getElementById("mobileSlideNumIndicator").textContent = `DIAPOSITIVA ${slideNum} DE ${TOTAL_SLIDES}`;
       document.getElementById("mobileSlideTitleDisplay").textContent = title;
       document.getElementById("mobileSpeakerDisplay").textContent = speaker;
 
@@ -2569,7 +2569,7 @@
       glossaryList.forEach(item => {
         glossaryHtml += `
           <div class="mobile-glossary-item">
-            <strong>📖 {item.term}:</strong> {item.easy}
+            <strong>📖 ${item.term}:</strong> ${item.easy}
           </div>
         `;
       });
@@ -2586,7 +2586,7 @@
       closeAllModals();
       const modal = document.getElementById("remoteModalOverlay");
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
+      const remoteUrl = `${currentUrl}?remote=1&room=${roomCode}`;
 
       document.getElementById("displayRoomCode").textContent = roomCode;
       document.getElementById("remoteDirectUrl").textContent = remoteUrl;
@@ -2601,7 +2601,7 @@
 
     function copyRemoteUrl() {
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
+      const remoteUrl = `${currentUrl}?remote=1&room=${roomCode}`;
       navigator.clipboard.writeText(remoteUrl).then(() => {
         alert("Enlace copiado al portapapeles. Péguelo en su celular.");
       }).catch(() => {
@@ -2611,7 +2611,7 @@
 
     function openPresenterWindow() {
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
+      const remoteUrl = `${currentUrl}?remote=1&room=${roomCode}`;
       window.open(remoteUrl, 'PresenterConsole', 'width=420,height=750');
       closeRemoteModal();
     }
@@ -2620,8 +2620,8 @@
     function generateQrSvg(text, size = 180) {
       const modules = 25;
       const cellSize = size / modules;
-      let svg = `<svg width="{size}" height="{size}" viewBox="0 0 {size} {size}" xmlns="http://www.w3.org/2000/svg">`;
-      svg += `<rect width="{size}" height="{size}" fill="#ffffff"/>`;
+      let svg = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">`;
+      svg += `<rect width="${size}" height="${size}" fill="#ffffff"/>`;
 
       let hash = 0;
       for (let i = 0; i < text.length; i++) {
@@ -2649,7 +2649,7 @@
           }
 
           if (isBlack) {
-            svg += `<rect x="{(c * cellSize).toFixed(1)}" y="{(r * cellSize).toFixed(1)}" width="{cellSize.toFixed(1)}" height="{cellSize.toFixed(1)}" fill="#000000"/>`;
+            svg += `<rect x="${(c * cellSize).toFixed(1)}" y="${(r * cellSize).toFixed(1)}" width="${cellSize.toFixed(1)}" height="${cellSize.toFixed(1)}" fill="#000000"/>`;
           }
         }
       }
@@ -2662,7 +2662,7 @@
     // ========================================================
     function highlightMatrixRow(rowNum) {
       for (let i = 1; i <= 4; i++) {
-        const r = document.getElementById(`mat-row-{i}`);
+        const r = document.getElementById(`mat-row-${i}`);
         if (r) r.style.background = (i === rowNum) ? "rgba(37, 99, 235, 0.35)" : "";
       }
       const info = {
@@ -2671,12 +2671,12 @@
         3: "Sujeto 3 (#103): Mujer de 22 años con satisfacción 3 (Media). Fila individual completa.",
         4: "Sujeto 4 (#104): Varón de 41 años con satisfacción 5 (Muy Alta). Fila individual completa."
       };
-      document.getElementById("matrixInspectorFeedback").innerHTML = `<strong>Fila Seleccionada:</strong> {info[rowNum]}`;
+      document.getElementById("matrixInspectorFeedback").innerHTML = `<strong>Fila Seleccionada:</strong> ${info[rowNum]}`;
     }
 
     function highlightInterval(intNum) {
       for (let i = 1; i <= 6; i++) {
-        const r = document.getElementById(`row-int-{i}`);
+        const r = document.getElementById(`row-int-${i}`);
         if (r) r.style.background = (i === intNum) ? "rgba(6, 182, 212, 0.25)" : "";
       }
       const details = {
@@ -2687,7 +2687,7 @@
         5: "Intervalo 71 a 75 puntos: 9 docentes. Desempeño destacado.",
         6: "Intervalo 76 a 85 puntos: 5 docentes. El tramo de calificaciones de excelencia."
       };
-      document.getElementById("intervalExplanationBox").innerHTML = `<strong>Intervalo Seleccionado:</strong> {details[intNum]}`;
+      document.getElementById("intervalExplanationBox").innerHTML = `<strong>Intervalo Seleccionado:</strong> ${details[intNum]}`;
     }
 
     function switchSpssView(view) {
@@ -2734,7 +2734,7 @@
         3: "Códigos: Etiquetas conceptuales que el investigador pega a las citas (ej. 'Sobrecarga laboral').",
         4: "Memos Analíticos: El diario reflexivo donde el investigador anota hipótesis y dudas teóricas."
       };
-      document.getElementById("huDetailBox").innerHTML = `<strong>Componente {num}:</strong> {info[num]}`;
+      document.getElementById("huDetailBox").innerHTML = `<strong>Componente ${num}:</strong> ${info[num]}`;
     }
 
     function inspectNetworkNode(node) {
