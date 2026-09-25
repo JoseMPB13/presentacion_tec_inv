@@ -1,4 +1,23 @@
-<!DOCTYPE html>
+# -*- coding: utf-8 -*-
+"""
+Generator script to build the perfected index.html.
+No timer, 17 slides (slide 18 removed), dynamic per-slide glossary,
+rich pedagogical notes, clear explanations of charts and examples,
+and full mobile remote synchronization.
+"""
+
+import sys
+import json
+from notes_and_glossary_data import SLIDE_GLOSSARIES, PRESENTER_NOTES
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+def generate_index_html():
+    # Convert glossaries and notes to JSON for safe injection into JS
+    glossaries_json = json.dumps(SLIDE_GLOSSARIES, ensure_ascii=False)
+    notes_json = json.dumps(PRESENTER_NOTES, ensure_ascii=False)
+
+    html = f'''<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +25,7 @@
   <title>Defensa Metodológica: Puntos 6.4 al 6.7 | UPDS</title>
   <meta name="description" content="Presentación interactiva doctoral para defensa de informe metodológico de investigación científica en la Universidad Privada Domingo Savio.">
   <style>
-    :root {
+    :root {{
       --bg-dark: #0f172a;
       --bg-darker: #090d16;
       --bg-surface: #1e293b;
@@ -32,17 +51,17 @@
       --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
       --shadow-glow: 0 0 25px rgba(37, 99, 235, 0.25);
       --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    }}
 
-    * {
+    * {{
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-    }
+    }}
 
-    body {
+    body {{
       background-color: var(--bg-dark);
       color: var(--text-body);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -53,10 +72,10 @@
       display: flex;
       flex-direction: column;
       user-select: none;
-    }
+    }}
 
     /* TOP BAR PERSISTENTE (SIN TEMPORIZADOR) */
-    .top-bar {
+    .top-bar {{
       height: 60px;
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(12px);
@@ -67,15 +86,15 @@
       padding: 0 24px;
       z-index: 100;
       flex-shrink: 0;
-    }
+    }}
 
-    .brand-group {
+    .brand-group {{
       display: flex;
       align-items: center;
       gap: 14px;
-    }
+    }}
 
-    .institution-badge {
+    .institution-badge {{
       display: flex;
       align-items: center;
       gap: 8px;
@@ -87,9 +106,9 @@
       font-weight: 700;
       color: var(--text-white);
       letter-spacing: 0.5px;
-    }
+    }}
 
-    .speaker-pill {
+    .speaker-pill {{
       display: flex;
       align-items: center;
       gap: 10px;
@@ -102,44 +121,44 @@
       color: var(--accent-cyan);
       box-shadow: var(--shadow-sm);
       transition: var(--transition);
-    }
+    }}
 
-    .speaker-pill .speaker-num {
+    .speaker-pill .speaker-num {{
       background: var(--primary);
       color: var(--text-white);
       padding: 2px 8px;
       border-radius: 12px;
       font-size: 0.72rem;
       font-weight: 800;
-    }
+    }}
 
-    .speaker-pill .subtopic {
+    .speaker-pill .subtopic {{
       color: var(--text-muted);
       font-weight: 400;
-    }
+    }}
 
-    .top-actions {
+    .top-actions {{
       display: flex;
       align-items: center;
       gap: 12px;
-    }
+    }}
 
-    .remote-live-dot {
+    .remote-live-dot {{
       width: 10px;
       height: 10px;
       border-radius: 50%;
       background: var(--accent-emerald);
       box-shadow: 0 0 10px var(--accent-emerald);
       display: inline-block;
-    }
+    }}
 
-    .remote-live-dot.waiting {
+    .remote-live-dot.waiting {{
       background: var(--accent-amber);
       box-shadow: 0 0 10px var(--accent-amber);
-    }
+    }}
 
     /* MAIN STAGE (SLIDE CONTAINER) */
-    .stage-container {
+    .stage-container {{
       flex: 1;
       position: relative;
       overflow: hidden;
@@ -147,16 +166,16 @@
       align-items: center;
       justify-content: center;
       padding: 16px 24px;
-    }
+    }}
 
-    .slide-deck {
+    .slide-deck {{
       width: 100%;
       height: 100%;
       max-width: 1440px;
       position: relative;
-    }
+    }}
 
-    .slide {
+    .slide {{
       position: absolute;
       inset: 0;
       display: flex;
@@ -166,17 +185,17 @@
       transform: scale(0.98) translateY(8px);
       transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.35s;
       pointer-events: none;
-    }
+    }}
 
-    .slide.active {
+    .slide.active {{
       opacity: 1;
       visibility: visible;
       transform: scale(1) translateY(0);
       pointer-events: auto;
-    }
+    }}
 
     /* SLIDE HEADER */
-    .slide-header {
+    .slide-header {{
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
@@ -184,9 +203,9 @@
       padding-bottom: 10px;
       border-bottom: 1px solid var(--border-subtle);
       flex-shrink: 0;
-    }
+    }}
 
-    .slide-pretitle {
+    .slide-pretitle {{
       font-size: 0.76rem;
       font-weight: 800;
       letter-spacing: 1.2px;
@@ -196,32 +215,32 @@
       display: flex;
       align-items: center;
       gap: 6px;
-    }
+    }}
 
-    .slide-title {
+    .slide-title {{
       font-size: 1.45rem;
       font-weight: 800;
       color: var(--text-white);
       letter-spacing: -0.3px;
       line-height: 1.25;
-    }
+    }}
 
-    .slide-meta-badge {
+    .slide-meta-badge {{
       display: flex;
       flex-direction: column;
       align-items: flex-end;
       gap: 2px;
       font-size: 0.75rem;
       color: var(--text-muted);
-    }
+    }}
 
-    .slide-meta-badge strong {
+    .slide-meta-badge strong {{
       color: var(--accent-emerald);
       font-size: 0.82rem;
-    }
+    }}
 
     /* SLIDE CONTENT (GRID 2 COLUMNS) */
-    .slide-content {
+    .slide-content {{
       flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -229,14 +248,14 @@
       min-height: 0;
       overflow-y: auto;
       padding-bottom: 6px;
-    }
+    }}
 
-    .slide-content.full-width {
+    .slide-content.full-width {{
       grid-template-columns: 1fr;
-    }
+    }}
 
     /* GLASS CARDS */
-    .glass-card {
+    .glass-card {{
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
@@ -248,14 +267,14 @@
       position: relative;
       overflow: hidden;
       transition: var(--transition);
-    }
+    }}
 
-    .glass-card:hover {
+    .glass-card:hover {{
       border-color: rgba(37, 99, 235, 0.3);
       box-shadow: var(--shadow-md);
-    }
+    }}
 
-    .card-title {
+    .card-title {{
       font-size: 0.98rem;
       font-weight: 700;
       color: var(--text-white);
@@ -264,29 +283,29 @@
       align-items: center;
       gap: 8px;
       flex-shrink: 0;
-    }
+    }}
 
-    .card-title .icon {
+    .card-title .icon {{
       font-size: 1.15rem;
-    }
+    }}
 
-    p, ul, ol {
+    p, ul, ol {{
       font-size: 0.88rem;
       color: var(--text-body);
       line-height: 1.5;
-    }
+    }}
 
-    ul, ol {
+    ul, ol {{
       padding-left: 20px;
       margin-bottom: 10px;
-    }
+    }}
 
-    li {
+    li {{
       margin-bottom: 6px;
-    }
+    }}
 
     /* RECUADROS EXPLICATIVOS DIDÁCTICOS */
-    .didactic-box {
+    .didactic-box {{
       background: rgba(15, 23, 42, 0.7);
       border: 1px solid rgba(6, 182, 212, 0.3);
       border-left: 4px solid var(--accent-cyan);
@@ -296,13 +315,13 @@
       font-size: 0.84rem;
       color: #e2e8f0;
       line-height: 1.45;
-    }
+    }}
 
-    .didactic-box strong {
+    .didactic-box strong {{
       color: var(--accent-cyan);
-    }
+    }}
 
-    .alert-box {
+    .alert-box {{
       background: rgba(245, 158, 11, 0.1);
       border-left: 4px solid var(--accent-amber);
       padding: 10px 14px;
@@ -310,28 +329,28 @@
       margin-top: 10px;
       font-size: 0.84rem;
       color: #fde68a;
-    }
+    }}
 
-    .alert-box.success {
+    .alert-box.success {{
       background: rgba(16, 185, 129, 0.1);
       border-left-color: var(--accent-emerald);
       color: #a7f3d0;
-    }
+    }}
 
-    .alert-box.danger {
+    .alert-box.danger {{
       background: rgba(244, 63, 94, 0.1);
       border-left-color: var(--accent-rose);
       color: #fecdd3;
-    }
+    }}
 
-    .alert-box.info {
+    .alert-box.info {{
       background: rgba(37, 99, 235, 0.15);
       border-left-color: var(--primary-light);
       color: #bfdbfe;
-    }
+    }}
 
     /* BARRA DINÁMICA DE GLOSARIO DE LA DIAPOSITIVA (FOOTER DE CADA SLIDE) */
-    .slide-glossary-bar {
+    .slide-glossary-bar {{
       margin-top: 10px;
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid var(--border-subtle);
@@ -341,9 +360,9 @@
       align-items: center;
       gap: 12px;
       flex-shrink: 0;
-    }
+    }}
 
-    .glossary-bar-label {
+    .glossary-bar-label {{
       font-size: 0.74rem;
       font-weight: 800;
       text-transform: uppercase;
@@ -353,17 +372,17 @@
       align-items: center;
       gap: 6px;
       white-space: nowrap;
-    }
+    }}
 
-    .glossary-pills-row {
+    .glossary-pills-row {{
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
       flex: 1;
-    }
+    }}
 
-    .glossary-term-chip {
+    .glossary-term-chip {{
       background: var(--bg-surface);
       border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 3px 10px;
@@ -375,20 +394,20 @@
       align-items: center;
       gap: 6px;
       transition: var(--transition);
-    }
+    }}
 
-    .glossary-term-chip:hover {
+    .glossary-term-chip:hover {{
       border-color: var(--accent-amber);
       background: rgba(245, 158, 11, 0.15);
       transform: translateY(-1px);
-    }
+    }}
 
-    .glossary-term-chip strong {
+    .glossary-term-chip strong {{
       color: var(--accent-amber);
-    }
+    }}
 
     /* BOTTOM CONTROL BAR */
-    .bottom-bar {
+    .bottom-bar {{
       height: 56px;
       background: rgba(15, 23, 42, 0.95);
       border-top: 1px solid var(--border-subtle);
@@ -398,15 +417,15 @@
       padding: 0 24px;
       z-index: 100;
       flex-shrink: 0;
-    }
+    }}
 
-    .controls-group {
+    .controls-group {{
       display: flex;
       align-items: center;
       gap: 10px;
-    }
+    }}
 
-    .btn-nav {
+    .btn-nav {{
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
       color: var(--text-white);
@@ -420,41 +439,41 @@
       gap: 8px;
       transition: var(--transition);
       user-select: none;
-    }
+    }}
 
-    .btn-nav:hover {
+    .btn-nav:hover {{
       background: var(--bg-surface-elevated);
       border-color: var(--border-accent);
       transform: translateY(-1px);
-    }
+    }}
 
-    .btn-nav.primary {
+    .btn-nav.primary {{
       background: var(--primary);
       border-color: var(--primary-light);
       box-shadow: 0 2px 8px var(--primary-glow);
-    }
+    }}
 
-    .slide-counter {
+    .slide-counter {{
       font-size: 0.84rem;
       color: var(--text-muted);
       font-weight: 500;
       padding: 0 8px;
-    }
+    }}
 
-    .slide-counter span {
+    .slide-counter span {{
       color: var(--text-white);
       font-weight: 700;
-    }
+    }}
 
-    .shortcuts-hint {
+    .shortcuts-hint {{
       font-size: 0.78rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
       gap: 12px;
-    }
+    }}
 
-    .kbd {
+    .kbd {{
       background: var(--bg-surface);
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 4px;
@@ -462,10 +481,10 @@
       font-size: 0.7rem;
       color: var(--text-white);
       font-family: monospace;
-    }
+    }}
 
     /* MODAL OVERLAYS */
-    .modal-overlay {
+    .modal-overlay {{
       position: fixed;
       inset: 0;
       background: rgba(0, 0, 0, 0.8);
@@ -478,14 +497,14 @@
       opacity: 0;
       visibility: hidden;
       transition: var(--transition);
-    }
+    }}
 
-    .modal-overlay.open {
+    .modal-overlay.open {{
       opacity: 1;
       visibility: visible;
-    }
+    }}
 
-    .modal-window {
+    .modal-window {{
       background: var(--bg-surface);
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-lg);
@@ -498,31 +517,31 @@
       transform: scale(0.96);
       transition: var(--transition);
       overflow: hidden;
-    }
+    }}
 
-    .modal-overlay.open .modal-window {
+    .modal-overlay.open .modal-window {{
       transform: scale(1);
-    }
+    }}
 
-    .modal-header {
+    .modal-header {{
       padding: 16px 22px;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: rgba(15, 23, 42, 0.7);
-    }
+    }}
 
-    .modal-title {
+    .modal-title {{
       font-size: 1.15rem;
       font-weight: 700;
       color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 10px;
-    }
+    }}
 
-    .modal-close {
+    .modal-close {{
       background: transparent;
       border: none;
       color: var(--text-muted);
@@ -535,29 +554,29 @@
       justify-content: center;
       border-radius: var(--radius-sm);
       transition: var(--transition);
-    }
+    }}
 
-    .modal-close:hover {
+    .modal-close:hover {{
       background: rgba(255, 255, 255, 0.1);
       color: var(--text-white);
-    }
+    }}
 
-    .modal-body {
+    .modal-body {{
       padding: 20px 24px;
       overflow-y: auto;
       flex: 1;
-    }
+    }}
 
     /* SECCIONES EN EL MODAL DE NOTAS */
-    .note-section {
+    .note-section {{
       margin-bottom: 16px;
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
       padding: 14px 18px;
-    }
+    }}
 
-    .note-section-title {
+    .note-section-title {{
       font-size: 0.8rem;
       font-weight: 800;
       text-transform: uppercase;
@@ -566,32 +585,32 @@
       display: flex;
       align-items: center;
       gap: 8px;
-    }
+    }}
 
-    .note-section-title.goal { color: var(--accent-cyan); }
-    .note-section-title.script { color: var(--accent-emerald); }
-    .note-section-title.metaphor { color: var(--accent-amber); }
-    .note-section-title.faq { color: var(--accent-purple); }
-    .note-section-title.glossary { color: #38bdf8; }
-    .note-section-title.pass { color: #f43f5e; }
+    .note-section-title.goal {{ color: var(--accent-cyan); }}
+    .note-section-title.script {{ color: var(--accent-emerald); }}
+    .note-section-title.metaphor {{ color: var(--accent-amber); }}
+    .note-section-title.faq {{ color: var(--accent-purple); }}
+    .note-section-title.glossary {{ color: #38bdf8; }}
+    .note-section-title.pass {{ color: #f43f5e; }}
 
-    .note-content {
+    .note-content {{
       font-size: 0.92rem;
       line-height: 1.6;
       color: var(--text-white);
-    }
+    }}
 
     /* QR MODAL BOX */
-    .qr-box-container {
+    .qr-box-container {{
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 16px;
       padding: 10px;
-    }
+    }}
 
-    .qr-svg-holder {
+    .qr-svg-holder {{
       background: white;
       padding: 14px;
       border-radius: var(--radius-md);
@@ -599,9 +618,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-    }
+    }}
 
-    .room-code-tag {
+    .room-code-tag {{
       background: var(--primary);
       color: white;
       padding: 4px 14px;
@@ -609,9 +628,9 @@
       font-weight: 800;
       font-size: 1.1rem;
       letter-spacing: 1px;
-    }
+    }}
 
-    .action-btn {
+    .action-btn {{
       background: var(--primary);
       border: 1px solid var(--primary-light);
       color: white;
@@ -624,27 +643,27 @@
       align-items: center;
       gap: 8px;
       transition: var(--transition);
-    }
+    }}
 
-    .action-btn:hover {
+    .action-btn:hover {{
       background: var(--primary-light);
       transform: translateY(-1px);
-    }
+    }}
 
-    .action-btn.secondary {
+    .action-btn.secondary {{
       background: var(--bg-surface-elevated);
       border-color: var(--border-subtle);
-    }
+    }}
 
     /* OVERVIEW THUMBNAILS GRID (17 SLIDES) */
-    .overview-grid {
+    .overview-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       gap: 14px;
       padding: 4px;
-    }
+    }}
 
-    .overview-card {
+    .overview-card {{
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-md);
@@ -653,43 +672,43 @@
       transition: var(--transition);
       display: flex;
       flex-direction: column;
-    }
+    }}
 
-    .overview-card:hover {
+    .overview-card:hover {{
       border-color: var(--primary);
       transform: translateY(-2px);
-    }
+    }}
 
-    .overview-card.current {
+    .overview-card.current {{
       border-color: var(--accent-cyan);
       box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-    }
+    }}
 
-    .overview-num {
+    .overview-num {{
       font-size: 0.72rem;
       font-weight: 800;
       color: var(--accent-cyan);
       margin-bottom: 4px;
-    }
+    }}
 
-    .overview-title {
+    .overview-title {{
       font-size: 0.84rem;
       font-weight: 700;
       color: var(--text-white);
       margin-bottom: 6px;
       line-height: 1.3;
-    }
+    }}
 
-    .overview-speaker {
+    .overview-speaker {{
       font-size: 0.74rem;
       color: var(--text-muted);
       margin-top: auto;
-    }
+    }}
 
     /* ======================================================== */
     /* MODO CONSOLA MÓVIL (ACTIVADO MEDIANTE ?remote=1)         */
     /* ======================================================== */
-    .mobile-remote-container {
+    .mobile-remote-container {{
       display: none;
       position: fixed;
       inset: 0;
@@ -698,19 +717,19 @@
       flex-direction: column;
       overflow-y: auto;
       padding: 16px;
-    }
+    }}
 
     body.remote-mode .top-bar,
     body.remote-mode .stage-container,
-    body.remote-mode .bottom-bar {
+    body.remote-mode .bottom-bar {{
       display: none !important;
-    }
+    }}
 
-    body.remote-mode .mobile-remote-container {
+    body.remote-mode .mobile-remote-container {{
       display: flex !important;
-    }
+    }}
 
-    .mobile-header-card {
+    .mobile-header-card {{
       background: var(--bg-surface);
       border: 1px solid var(--border-accent);
       border-radius: var(--radius-md);
@@ -719,23 +738,23 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-    }
+    }}
 
-    .mobile-status-row {
+    .mobile-status-row {{
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-size: 0.78rem;
-    }
+    }}
 
-    .mobile-slide-title {
+    .mobile-slide-title {{
       font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-white);
       line-height: 1.25;
-    }
+    }}
 
-    .mobile-speaker-badge {
+    .mobile-speaker-badge {{
       background: rgba(37, 99, 235, 0.2);
       border: 1px solid var(--border-accent);
       padding: 4px 10px;
@@ -745,10 +764,10 @@
       color: var(--accent-cyan);
       display: inline-block;
       align-self: flex-start;
-    }
+    }}
 
     /* BOTONES GIGANTES TÁCTILES DEL CELULAR */
-    .mobile-touch-controls {
+    .mobile-touch-controls {{
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
@@ -758,9 +777,9 @@
       z-index: 50;
       background: var(--bg-dark);
       padding: 6px 0;
-    }
+    }}
 
-    .btn-mobile-touch {
+    .btn-mobile-touch {{
       background: var(--bg-surface-elevated);
       border: 2px solid var(--border-accent);
       color: var(--text-white);
@@ -775,28 +794,28 @@
       gap: 8px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       -webkit-tap-highlight-color: transparent;
-    }
+    }}
 
-    .btn-mobile-touch.primary {
+    .btn-mobile-touch.primary {{
       background: var(--primary);
       border-color: var(--primary-light);
       box-shadow: 0 4px 15px var(--primary-glow);
-    }
+    }}
 
-    .btn-mobile-touch:active {
+    .btn-mobile-touch:active {{
       transform: scale(0.96);
-    }
+    }}
 
     /* TARJETA DE GLOSARIO DINÁMICO EN EL CELULAR */
-    .mobile-glossary-card {
+    .mobile-glossary-card {{
       background: rgba(245, 158, 11, 0.08);
       border: 1px solid rgba(245, 158, 11, 0.3);
       border-radius: var(--radius-md);
       padding: 14px;
       margin-bottom: 14px;
-    }
+    }}
 
-    .mobile-glossary-title {
+    .mobile-glossary-title {{
       font-size: 0.82rem;
       font-weight: 800;
       text-transform: uppercase;
@@ -805,21 +824,21 @@
       display: flex;
       align-items: center;
       gap: 6px;
-    }
+    }}
 
-    .mobile-glossary-item {
+    .mobile-glossary-item {{
       font-size: 0.86rem;
       line-height: 1.45;
       color: #fef3c7;
       margin-bottom: 8px;
-    }
+    }}
 
-    .mobile-glossary-item strong {
+    .mobile-glossary-item strong {{
       color: #fff;
-    }
+    }}
 
     /* TABLAS Y ELEMENTOS GRÁFICOS PERSONALIZADOS */
-    .matrix-table {
+    .matrix-table {{
       width: 100%;
       border-collapse: collapse;
       font-size: 0.82rem;
@@ -827,25 +846,25 @@
       background: rgba(15, 23, 42, 0.6);
       border-radius: var(--radius-sm);
       overflow: hidden;
-    }
+    }}
 
-    .matrix-table th, .matrix-table td {
+    .matrix-table th, .matrix-table td {{
       padding: 8px 10px;
       text-align: center;
       border: 1px solid var(--border-subtle);
-    }
+    }}
 
-    .matrix-table th {
+    .matrix-table th {{
       background: rgba(30, 41, 59, 0.9);
       color: var(--accent-cyan);
       font-weight: 700;
-    }
+    }}
 
-    .matrix-table tr:hover {
+    .matrix-table tr:hover {{
       background: rgba(37, 99, 235, 0.15);
-    }
+    }}
 
-    .interactive-btn {
+    .interactive-btn {{
       background: rgba(37, 99, 235, 0.15);
       border: 1px solid var(--border-accent);
       color: var(--text-white);
@@ -856,12 +875,12 @@
       cursor: pointer;
       transition: var(--transition);
       margin: 2px;
-    }
+    }}
 
-    .interactive-btn:hover, .interactive-btn.active {
+    .interactive-btn:hover, .interactive-btn.active {{
       background: var(--primary);
       border-color: var(--primary-light);
-    }
+    }}
   </style>
 </head>
 <body>
@@ -2176,11 +2195,11 @@
     let syncWs = null;
 
     // Inyección de Glosarios y Notas enriquecidas
-    const slideGlossaries = {"1": [{"term": "Metodología de la Investigación", "easy": "El camino ordenado y comprobable que se sigue para descubrir la verdad sin caer en suposiciones."}, {"term": "Defensa Colegiada", "easy": "Exposición formal donde todos los miembros del equipo demuestran dominio integral de los temas defendidos."}, {"term": "Triangulación Metodológica", "easy": "Combinar números y palabras para tener una visión 100% completa de la realidad investigada."}], "2": [{"term": "Tabulación de Datos", "easy": "Pasar de tener una montaña de encuestas desordenadas a una tabla ordenada y limpia lista para contar."}, {"term": "Unidad de Análisis", "easy": "Cada persona, documento o entidad individual a la que se le aplicó la encuesta (ej. un docente o un estudiante)."}, {"term": "Registro Primario", "easy": "El cuestionario original tal cual fue respondido por la persona, antes de cualquier modificación."}], "3": [{"term": "Matriz de Datos (N × K)", "easy": "Una tabla como Excel donde las filas (N) son las personas y las columnas (K) son las preguntas evaluadas."}, {"term": "Libro de Códigos (Codebook)", "easy": "El 'diccionario de traducción' que define qué número representa cada respuesta (ej. 1 = Varón, 2 = Mujer)."}, {"term": "Pre-codificación vs. Post-codificación", "easy": "Pre-codificar es poner números antes de encuestar; post-codificar es leer respuestas de texto libre y agruparlas en números después."}], "4": [{"term": "Missing Data (Valores Perdidos)", "easy": "Casillas vacías en la tabla porque la persona no quiso responder, no sabía o se saltó la pregunta."}, {"term": "Eliminación Listwise", "easy": "El grave error de botar a la basura a toda la persona encuestada solo porque dejó una preguntita en blanco."}, {"term": "Tabla de Contingencia (2 × 2)", "easy": "Una tablita de 4 casillas para comparar dos grupos frente a dos alternativas (ej. Varones vs. Mujeres que usan aula virtual)."}], "5": [{"term": "Frecuencia Absoluta (fᵢ)", "easy": "La cantidad exacta de personas que eligieron una opción específica."}, {"term": "Porcentaje Válido", "easy": "El porcentaje real calculado únicamente sobre los que sí respondieron, sin contar las casillas en blanco."}, {"term": "Frecuencia Acumulada (Fᵢ)", "easy": "La suma progresiva de personas desde la primera opción hasta la actual ('hasta aquí acumulamos tantos')."}], "6": [{"term": "Intervalo de Clase", "easy": "Grupos de valores para no hacer una fila por cada número (ej. notas de 51 a 60, de 61 a 70)."}, {"term": "Marca de Clase (Xᵢ)", "easy": "El punto medio exacto de cada grupo; representa matemáticamente a todo el intervalo en los cálculos."}, {"term": "Amplitud (c)", "easy": "El ancho o tamaño de cada grupo (ej. en el intervalo de 51 a 60 hay una amplitud de 10 puntos)."}], "7": [{"term": "Escala Nominal", "easy": "Etiquetas o nombres que no tienen orden ni jerarquía (ej. Carreras: Sistemas, Derecho, Medicina). Se grafican con barras separadas."}, {"term": "Escala Continua", "easy": "Números que pueden tener decimales y van seguidos sin saltos (ej. notas de 0 a 100). Exigen un Histograma."}, {"term": "Histograma", "easy": "Gráfico de barras que van completamente pegadas para mostrar que los números continuos no tienen interrupciones."}], "8": [{"term": "Boxplot (Diagrama de Caja)", "easy": "Una radiografía visual que resume en un solo dibujo las notas mínimas, máximas y el 50% de la gente del medio."}, {"term": "Mediana", "easy": "La nota exacta que divide a los participantes en dos mitades iguales (50% arriba y 50% abajo)."}, {"term": "Rango Intercuartílico (IQR)", "easy": "El tamaño de la caja central; contiene exactamente al 50% central de los participantes."}, {"term": "Outlier (Dato Atípico)", "easy": "Un caso rarísimo o extremo muy separado del resto (ej. alguien que sacó 99 cuando el promedio del curso fue 50)."}], "9": [{"term": "Estadística Descriptiva", "easy": "Resumir y mostrar lo que ocurrió con los encuestados que participaron en el estudio."}, {"term": "Estadística Inferencial", "easy": "Generalizar y sacar conclusiones para toda una población a partir de una muestra de participantes."}, {"term": "Distribución Normal (Campana de Gauss)", "easy": "Cuando la mayoría de notas se concentran en el centro y muy pocas en los extremos."}], "10": [{"term": "Correlación (r de Pearson)", "easy": "Un número de -1 a +1 que mide si dos cosas suben o bajan juntas (ej. a más horas de estudio, mayor nota)."}, {"term": "Regresión Lineal", "easy": "Una fórmula matemática que permite predecir el futuro (ej. predecir la nota exacta según las horas estudiadas)."}, {"term": "Variable Independiente (X) y Dependiente (Y)", "easy": "X es la causa que manejamos (horas de estudio) e Y es el efecto resultante (nota obtenida)."}], "11": [{"term": "Minería de Datos", "easy": "Usar computadoras potentes para descubrir patrones y secretos ocultos en gigantescos volúmenes de datos."}, {"term": "Proceso KDD", "easy": "Los pasos científicos ordenados desde seleccionar los datos hasta transformarlos en decisiones inteligentes."}, {"term": "Patrón Oculto", "easy": "Una relación importante que los humanos no pueden notar a simple vista en una tabla común."}], "12": [{"term": "Correlación NO es Causalidad", "easy": "Regla de oro: que dos cosas ocurran a la vez no significa que una cause a la otra (ej. helados y ahogamientos)."}, {"term": "Sobreajuste (Overfitting)", "easy": "Cuando un modelo se aprende los datos de memoria y falla al intentar predecir casos nuevos de la realidad."}, {"term": "Precedencia Temporal", "easy": "Para afirmar que A causa B, la causa A tiene que ocurrir obligatoriamente antes en el tiempo que el efecto B."}], "13": [{"term": "IBM SPSS Statistics", "easy": "El software estadístico más utilizado en universidades para procesar datos cuantitativos sin errores de cálculo."}, {"term": "Vista de Variables", "easy": "La pestaña donde se configuran y bautizan las preguntas (nombre, tipo de dato, etiquetas y valores)."}, {"term": "Vista de Datos", "easy": "La hoja parecida a Excel donde se observan las respuestas reales persona por persona."}], "14": [{"term": "p-valor (Sig. bilateral)", "easy": "El detector de mentiras científico: la probabilidad de que nuestro hallazgo haya sido producto de la suerte o casualidad."}, {"term": "Regla p < 0.05", "easy": "Si el p-valor es menor al 5%, festejamos: el resultado es estadísticamente real y se rechaza la casualidad."}, {"term": "Hipótesis Nula (H₀)", "easy": "La postura escéptica que afirma: 'Aquí no hay relación alguna, todo fue simple coincidencia'."}], "15": [{"term": "Análisis Cualitativo", "easy": "Investigar a profundidad palabras, entrevistas, vivencias y opiniones humanas en lugar de números."}, {"term": "Unidad Hermenéutica", "easy": "El proyecto o contenedor en ATLAS.ti que agrupa todos los documentos, audios y entrevistas de la investigación."}, {"term": "Citas (Quotations)", "easy": "Fragmentos textuales exactos de lo que dijeron los entrevistados que usamos como evidencia viva."}], "16": [{"term": "Red Semántica", "easy": "Un mapa conceptual en ATLAS.ti donde conectamos ideas con flechas que tienen significado (ej. 'es causa de', 'contradice')."}, {"term": "Codificación Axial", "easy": "El proceso de encontrar cuál es el tema o problema principal que conecta todas las opiniones de la gente."}, {"term": "Triangulación Cualitativa-Cuantitativa", "easy": "Respaldar los porcentajes de SPSS con los testimonios de ATLAS.ti para una investigación sólida."}], "17": [{"term": "Ciclo Metodológico Completo", "easy": "El recorrido ordenado: ordenar los datos -> graficar -> probar hipótesis -> escuchar testimonios."}, {"term": "Rigor Científico", "easy": "Cumplir cada paso del método para que ningún evaluador pueda dudar de la veracidad de los resultados."}, {"term": "Auditoría de Datos", "easy": "Mantener la matriz y el libro de códigos limpios para que cualquiera pueda verificar la investigación."}]};
-    const presenterNotes = {"1": {"speaker": "Equipo de Investigación UPDS", "goal": "Apertura formal de la defensa, presentación del equipo y contextualización del informe metodológico.", "script": "Buenos días estimado docente evaluador, Licenciado Marcial Villarroel Siles, y compañeros. Hoy nuestro equipo presenta la defensa formal del informe metodológico correspondiente a los puntos 6.4 al 6.7. A lo largo de esta exposición demostraremos cómo los datos brutos se transforman paso a paso en conocimiento científico riguroso: desde la recolección y tabulación, pasando por la distribución de frecuencias y selección gráfica, hasta llegar a las pruebas estadísticas en SPSS y la interpretación cualitativa en ATLAS.ti. Cada uno de los 8 expositores defenderá un subtema clave articulado de manera colegiada.", "metaphor": "Investigar es como construir un edificio: si los cimientos (la tabulación y la matriz de datos) están desordenados, todo el análisis que se construya encima se vendrá abajo.", "faq": "¿Por qué es indispensable este proceso secuencial? Respuesta: Porque la ciencia exige que cualquier otro investigador pueda repetir nuestros pasos (replicabilidad) y llegar exactamente a los mismos resultados.", "pass": "Para dar inicio al Bloque 1, cedo la palabra a mi compañero Deivy Melgar Perez, quien expondrá el concepto y rol metodológico de la tabulación."}, "2": {"speaker": "Deivy Melgar Perez (Expositor 1)", "goal": "Explicar de forma clara qué es la tabulación de datos, para qué sirve y cómo evita errores graves en la investigación.", "script": "Muchas gracias. Estimado jurado, cuando aplicamos una encuesta a decenas o cientos de personas, lo primero que tenemos en las manos es un cúmulo caótico de papeletas o registros sueltos. La tabulación de datos es precisamente el puente metodológico que transforma ese desorden en un sistema ordenado y listo para ser analizado. Consiste en contar, agrupar y organizar las respuestas en tablas sintéticas. Como vemos en el ejemplo en pantalla, si preguntamos a 5 docentes de la UPDS su antigüedad y su uso de tecnología, la tabulación nos permite pasar de hojas sueltas a un conteo ordenado que revela de inmediato los patrones de la muestra.", "metaphor": "La tabulación es como clasificar la correspondencia en una oficina postal: antes de entregar las cartas, hay que separarlas por barrio y calle para no perder nada.", "faq": "¿Cuál es la diferencia entre tabulación manual y electrónica? Respuesta: La manual usa palotes de conteo para muestras pequeñas; la electrónica procesa matrices masivas en hojas de cálculo o SPSS garantizando velocidad y cero error de cálculo.", "pass": "Habiendo sentado las bases de la tabulación, doy paso a mi compañera María Teresa Paco Flores, quien explicará el proceso técnico de codificación y la estructura de la matriz de datos."}, "3": {"speaker": "María Teresa Paco Flores (Expositor 2)", "goal": "Demostrar cómo se codifican preguntas cualitativas y cuantitativas y explicar la anatomía de la matriz de datos (N × K).", "script": "Gracias Deivy. Continuando con el punto 6.4, las computadoras y los programas estadísticos no leen discursos ni sentimientos: leen números. La codificación es la técnica que traduce las respuestas de las personas en valores numéricos bien definidos. Si la pregunta es cerrada, como el género, usamos pre-codificación: 1 para masculino y 2 para femenino. Si la pregunta es abierta, usamos post-codificación: leemos todas las respuestas, identificamos las ideas que más se repiten y les asignamos un código en nuestro 'Libro de Códigos'. Toda esta información se vuelca en una Matriz de Datos rectangular: cada fila es un participante (N) y cada columna es una pregunta o variable (K). En el inspector interactivo de la lámina vemos cómo el Sujeto 4 tiene sus códigos perfectamente asignados.", "metaphor": "El Libro de Códigos es como el diccionario de traducción entre lo que la persona respondió en su propio idioma y lo que la computadora necesita para calcular.", "faq": "¿Qué pasa si cambio un código a mitad de la investigación? Respuesta: Se contamina toda la base de datos. Por eso el Libro de Códigos se redacta antes y se respeta como documento oficial de auditoría.", "pass": "Continuando con mi intervención, paso ahora a explicar el tratamiento de los datos faltantes y las tablas de contingencia 2 × 2."}, "4": {"speaker": "María Teresa Paco Flores (Expositor 2 - Cont.)", "goal": "Alertar sobre el peligro de los datos faltantes (Missing Data) y explicar las tablas de contingencia 2 × 2 con porcentajes de fila.", "script": "Un aspecto crítico en toda investigación es: ¿qué hacemos cuando una persona no responde una pregunta? En estadística jamás debemos dejar la casilla vacía. Si dejamos un espacio en blanco, SPSS lo asume como 'perdido por el sistema' y suele cometer la 'eliminación por lista', desechando a toda la persona de cálculos futuros. La solución profesional es usar códigos de usuario: 8 para 'no aplica' o 9 para 'no contestó'. Asimismo, cuando necesitamos cruzar dos variables cualitativas, utilizamos las tablas de contingencia 2 por 2. En el ejemplo en pantalla de 150 docentes, cruzamos género y uso del aula virtual. Al mirar los porcentajes de fila, vemos claramente que el 75% de las mujeres utiliza el aula frente al 57% de los varones, insumo clave para la prueba Chi-cuadrado.", "metaphor": "Botar a un encuestado completo porque le faltó una respuesta es como tirar a la basura un libro entero de 300 páginas porque le falta una sola línea.", "faq": "¿Por qué calculamos porcentaje de fila y no de columna? Respuesta: Porque el porcentaje debe calcularse en el sentido de la variable independiente (género) para poder comparar los subgrupos de manera equitativa.", "pass": "Para dar inicio al Bloque 2 sobre sistematización y distribución de frecuencias, cedo la palabra a mi compañero José Maria Peredo Barba."}, "5": {"speaker": "José Maria Peredo Barba (Expositor 3)", "goal": "Explicar los 5 componentes obligatorios de una tabla de frecuencias y demostrar por qué el porcentaje válido es indispensable.", "script": "Muchas gracias María Teresa. En el punto 6.5 abordamos la sistematización. Sistematizar significa resumir las observaciones en una tabla de distribución de frecuencias canónica con cinco columnas: la categoría, la frecuencia absoluta, el porcentaje total, el porcentaje válido y el porcentaje acumulado. Quiero llamar la atención del jurado sobre el 'Porcentaje Válido'. En la simulación interactiva que tienen en pantalla, de 10 personas encuestadas, 2 dejaron la casilla vacía. Si calculamos sobre el total de 10, la satisfacción parece ser solo del 50%. Pero si calculamos el Porcentaje Válido sobre las 8 personas que sí respondieron, la satisfacción real es del 62.5%. Usar el porcentaje total falsearía la realidad.", "metaphor": "El porcentaje válido es como calificar un examen: la nota se saca sobre las preguntas que estaban en el examen, no sobre preguntas que el profesor olvidó imprimir.", "faq": "¿Cuándo coinciden el porcentaje total y el porcentaje válido? Respuesta: Únicamente cuando no existe ningún dato faltante en la muestra analizada.", "pass": "A continuación, en mi segunda lámina, explicaré cómo agrupar variables continuas en intervalos y el cálculo de la marca de clase."}, "6": {"speaker": "José Maria Peredo Barba (Expositor 3 - Cont.)", "goal": "Detallar cómo se agrupan datos continuos en intervalos de clase, calculando la marca de clase y la amplitud.", "script": "Cuando medimos variables cuantitativas continuas con decenas de notas distintas, como un examen de 0 a 100 puntos, no podemos hacer una fila por cada nota individual porque tendríamos una tabla kilométrica e inútil. Por eso agrupamos los datos en 'Intervalos de Clase'. Calculamos el Rango total (nota mayor menos nota menor), definimos el número de grupos y establecemos una amplitud constante. Cada intervalo tiene su 'Marca de Clase' o punto medio, que es el número representativo de todo ese grupo. En la tabla real en pantalla de 63 docentes, vemos que el grupo con mayor cantidad de docentes es el de 56 a 60 puntos con 16 docentes, y el porcentaje acumulado nos dice de inmediato que el 51.7% obtuvo 70 puntos o menos.", "metaphor": "Los intervalos de clase son como las tallas de ropa: en vez de fabricar una camisa para cada milímetro de persona, las agrupamos en Small, Medium y Large para organizarnos mejor.", "faq": "¿Qué representa la Marca de Clase en las fórmulas matemáticas? Respuesta: Es el valor promedio del intervalo que se utiliza como representante de todos los datos de ese grupo para calcular la media y la varianza.", "pass": "Habiendo organizado las frecuencias, doy paso a mi compañera Mishel Alcázar Valdez para abordar la selección gráfica y detección de anomalías."}, "7": {"speaker": "Mishel Alcázar Valdez (Expositor 4)", "goal": "Demostrar que la escala de medición de la variable impone el tipo de gráfico correcto y exhibir errores metodológicos habituales.", "script": "Gracias José María. En investigación científica un gráfico no es un adorno estético; es una herramienta de síntesis visual determinada estrictamente por la escala de medición de la variable. Si medimos una variable cualitativa o categórica (como carreras universitarias o estado civil), debemos usar gráficos de barras con separación entre barra y barra, o un gráfico circular de sectores si hay menos de 5 categorías. Pero si medimos una variable cuantitativa continua (como notas, sueldos o tiempo), es una falta metodológica usar barras separadas; estamos obligados a usar un Histograma, donde las barras están totalmente pegadas porque los valores numéricos no tienen saltos. En pantalla mostramos el error común frente al gráfico técnicamente correcto.", "metaphor": "Elegir un gráfico estadístico es como elegir el calzado: no puedes ir a jugar fútbol con zapatos de vestir ni a una cena de gala con zapatillas deportivas.", "faq": "¿Por qué las barras de un histograma van unidas? Respuesta: Porque representan variables continuas donde el final de un intervalo coincide inmediatamente con el inicio del siguiente.", "pass": "En mi siguiente intervención explicaré el diagrama de caja y bigotes (Boxplot) para la detección de valores atípicos u outliers."}, "8": {"speaker": "Mishel Alcázar Valdez (Expositor 4 - Cont.)", "goal": "Explicar la anatomía del Boxplot y el procedimiento para detectar valores atípicos (outliers) que distorsionan el promedio.", "script": "El diagrama de caja y bigotes o Boxplot es la herramienta visual más completa de la estadística descriptiva. En un solo gráfico resume 5 datos fundamentales: el mínimo, el Cuartil 1, la Mediana, el Cuartil 3 y el máximo. La caja encierra al 50% de las personas del medio y su altura se llama Rango Intercuartílico. Pero lo más valioso del Boxplot es su capacidad para detectar 'Outliers' o datos atípicos: aquellos valores que están ridículamente lejos del grupo. En el ejemplo en pantalla, mientras la mayoría de docentes obtuvo entre 50 y 75 puntos, el Sujeto 42 obtuvo 99 puntos. Identificar este dato atípico es vital, porque si lo dejamos sin revisar, alterará el promedio y dará una falsa impresión del rendimiento general.", "metaphor": "El dato atípico es como tener a un basquetbolista de la NBA de 2.20 metros en un curso de niños de primaria: si promedias la estatura, creerás que los niños son gigantes.", "faq": "¿Qué se hace con un outlier una vez detectado? Respuesta: Se audita el instrumento original para verificar si fue un error de digitación; si el dato es verídico, se reporta y se prefiere usar la mediana en lugar de la media.", "pass": "Con los datos verificados y graficados, cedo la palabra a mi compañero Carlos Alberto Choque Serrano para iniciar el análisis cuantitativo inferencial."}, "9": {"speaker": "Carlos Alberto Choque Serrano (Expositor 5)", "goal": "Explicar las 4 fases secuenciales del análisis cuantitativo y la transición de lo descriptivo a lo inferencial.", "script": "Muchas gracias Mishel. En el punto 6.6 ingresamos al corazón del análisis cuantitativo. Este análisis no se realiza de forma desordenada; sigue 4 fases secuenciales obligatorias. La Fase 1 es la Limpieza y Exploración: verificar que no haya casillas vacías ni datos disparatados. La Fase 2 es la Descripción: calcular medias, modas y porcentajes para conocer a la muestra. La Fase 3 es la Verificación de Supuestos: comprobar si los datos siguen una distribución normal en forma de campana de Gauss. Y la Fase 4 es la Inferencia Estadística: aplicar pruebas para comprobar si nuestras hipótesis de investigación se cumplen para toda la población. En pantalla pueden observar el diagrama de flujo interactivo de estas 4 fases.", "metaphor": "Las 4 fases son como el despegue de un avión: primero revisas los motores (limpieza), carreteas en la pista (descripción), pides permiso a la torre de control (supuestos) y finalmente vuelas a tu destino (inferencia).", "faq": "¿Qué ocurre si nos saltamos la fase de supuestos de normalidad? Respuesta: Se corre el riesgo de aplicar pruebas paramétricas incorrectas que llevarían a conclusiones totalmente falsas e inválidas.", "pass": "En mi siguiente lámina profundizaré en los modelos estadísticos clásicos: la correlación de Pearson y la regresión lineal."}, "10": {"speaker": "Carlos Alberto Choque Serrano (Expositor 5 - Cont.)", "goal": "Explicar de manera sencilla la correlación de Pearson (r) y la ecuación de regresión lineal para predecir resultados.", "script": "Uno de los objetivos más comunes en investigación es responder: ¿estas dos variables están relacionadas? Para eso usamos la Correlación de Pearson, simbolizada con la letra r. Este coeficiente oscila entre -1 y +1. Si da cerca de cero, no hay relación. Si da positivo, como el valor de r = .68 que vemos en pantalla, significa que a mayor cantidad de horas de estudio, mayor es el rendimiento académico. Y si queremos ir más allá y predecir el futuro, construimos una ecuación de Regresión Lineal: Y = 42.5 + 1.45 * X. Esta fórmula nos dice que si un estudiante estudia cero horas, su nota esperada es 42.5; pero por cada hora adicional de estudio, su calificación aumentará en 1.45 puntos. Así convertimos datos en modelos predictivos.", "metaphor": "La correlación te dice si dos amigos caminan siempre juntos; la regresión te dice exactamente cuántos pasos dará uno si el otro da diez pasos.", "faq": "¿Qué porcentaje de las notas explica el tiempo de estudio en este ejemplo? Respuesta: Se eleva r al cuadrado: (.68)^2 = 0.468, es decir, el 46.8% de la variación en las notas se explica por las horas de estudio.", "pass": "Habiendo presentado los modelos estadísticos clásicos, doy paso a mi compañera Dapne Scarlet Salvatierra Nina para abordar la minería de datos y KDD."}, "11": {"speaker": "Dapne Scarlet Salvatierra Nina (Expositor 6)", "goal": "Explicar qué es la minería de datos, el ciclo de 5 fases del proceso KDD y su aplicación en la investigación educativa.", "script": "Gracias Carlos. En el punto 6.6 damos un salto cualitativo hacia la Minería de Datos y el proceso KDD, que significa Descubrimiento de Conocimiento en Bases de Datos. En la actualidad, las instituciones educativas almacenan gigabytes de registros de asistencia, calificaciones y uso de plataformas virtuales. La minería de datos utiliza algoritmos avanzados para encontrar patrones ocultos que ningún ser humano podría descubrir mirando tablas comunes. El proceso KDD tiene 5 etapas: seleccionar los datos pertinentes, limpiarlos, transformarlos, aplicar algoritmos de minería y, finalmente, interpretar los resultados. En el ejemplo en pantalla, el sistema detecta tempranamente patrones de estudiantes en riesgo de deserción antes de que reprueben.", "metaphor": "La minería de datos es como buscar pepitas de oro en el lecho de un río: tienes que cribar toneladas de arena y lodo (datos brutos) para quedarte con las joyas valiosas de conocimiento.", "faq": "¿En qué se diferencia la estadística clásica de la minería de datos? Respuesta: La estadística clásica prueba hipótesis preconcebidas por el investigador; la minería de datos descubre relaciones novedosas e inesperadas dentro de grandes volúmenes de información.", "pass": "A continuación, en mi segunda lámina, explicaré la selección de modelos predictivos y la advertencia metodológica sobre la causalidad."}, "12": {"speaker": "Dapne Scarlet Salvatierra Nina (Expositor 6 - Cont.)", "goal": "Advertir con firmeza sobre la falacia de confundir correlación con causalidad y explicar los peligros del sobreajuste (overfitting).", "script": "Al construir modelos predictivos, el investigador debe estar alerta ante dos peligros metodológicos. El primero es el 'Sobreajuste' o Overfitting: cuando el modelo se aprende los datos de memoria como un estudiante que solo memoriza las respuestas del examen; si le cambiamos una pregunta en la realidad, fracasa. El segundo peligro, y el más grave, es la falacia de confundir correlación con causalidad. Que dos variables se muevan juntas no significa que una cause la otra. Existe un ejemplo clásico: el consumo de helados y las muertes por ahogamiento aumentan al mismo tiempo; ¿comer helado hace que la gente se ahogue? ¡No! La causa real es una tercera variable: el calor del verano. Para afirmar causalidad se exige asociación, precedencia en el tiempo y descartar variables extrañas.", "metaphor": "Confundir correlación con causalidad es como creer que el gallo hace salir el sol solo porque canta todas las mañanas unos minutos antes del amanecer.", "faq": "¿Cuáles son las 3 condiciones para demostrar causalidad? Respuesta: 1) Asociación estadística demostrada, 2) Precedencia temporal (la causa ocurre antes que el efecto), y 3) No espuriedad (ausencia de terceras variables que expliquen la relación).", "pass": "Para iniciar el Bloque 4 correspondiente al software computacional, cedo la palabra a mi compañero Yord Gember Rojas Rocha para exponer el uso de IBM SPSS."}, "13": {"speaker": "Yord Gember Rojas Rocha (Expositor 7)", "goal": "Explicar la arquitectura de IBM SPSS Statistics, diferenciando claramente la Vista de Variables de la Vista de Datos.", "script": "Muchas gracias Dapne. En el punto 6.7 entramos al procesamiento computarizado con IBM SPSS Statistics, el estándar internacional en ciencias sociales y de la salud. Para que SPSS procese los datos sin errores, el investigador debe dominar sus dos entornos de trabajo. En primer lugar, la 'Vista de Variables': es la ficha técnica donde bautizamos cada variable, le asignamos su etiqueta descriptiva, declaramos qué números representan a las categorías y definimos el nivel de medición (nominal, ordinal o escala). En segundo lugar, la 'Vista de Datos': es la planilla donde se vacían las respuestas reales fila por fila. En el simulador interactivo de la lámina pueden alternar entre ambas vistas para apreciar cómo la configuración técnica de la variable gobierna los datos ingresados.", "metaphor": "La Vista de Variables es como armar el molde de una torta; la Vista de Datos es verter los ingredientes reales dentro de ese molde.", "faq": "¿Qué ocurre si defino una variable continua como nominal en SPSS? Respuesta: SPSS restringirá los análisis matemáticos, impidiendo calcular medias y desviaciones estándar sobre esa variable.", "pass": "En mi siguiente lámina explicaré la lectura rigurosa de una salida de SPSS y la interpretación científica del p-valor."}, "14": {"speaker": "Yord Gember Rojas Rocha (Expositor 7 - Cont.)", "goal": "Explicar cómo se interpreta una tabla de correlación en SPSS y cómo se lee correctamente el p-valor frente al umbral Alfa = 0.05.", "script": "Cuando SPSS termina de calcular, genera una tabla de resultados como la que ven en pantalla. Lo fundamental ante un jurado evaluador es saber leer la fila de 'Sig. bilateral', que representa el p-valor. El p-valor es la probabilidad de que los resultados obtenidos sean producto de la pura casualidad. En ciencia establecemos un umbral estricto llamado Alfa, normalmente fijado en 0.05, es decir, el 5%. Si el p-valor es menor a 0.05, como en nuestra tabla donde figura .000 (reportado formalmente en normas APA como p < .001), rechazamos la Hipótesis Nula y confirmamos que la relación entre las variables es estadísticamente real y comprobada. Si el p-valor fuera mayor a 0.05, no tendríamos evidencia suficiente y no podríamos afirmar nada.", "metaphor": "El p-valor es como el veredicto en un juicio: si la probabilidad de inocencia por azar cae por debajo del 5%, la evidencia es contundente para dictar sentencia.", "faq": "¿Por qué en APA 7 nunca se escribe 'p = 0.000'? Respuesta: Porque una probabilidad nunca es exactamente cero; se debe escribir 'p < .001' indicando que es infinitesimalmente pequeña.", "pass": "Habiendo cubierto el procesamiento cuantitativo en SPSS, doy paso a mi compañero Rodrigo Arauz Mercado para abordar el análisis cualitativo en ATLAS.ti."}, "15": {"speaker": "Rodrigo Arauz Mercado (Expositor 8)", "goal": "Fundamentar el enfoque cualitativo computarizado y explicar los 4 componentes de la Unidad Hermenéutica en ATLAS.ti.", "script": "Muchas gracias Yord. En el punto 6.7 damos paso a la otra mitad indispensable de la investigación científica: el análisis cualitativo mediante ATLAS.ti. Los números de SPSS nos dicen 'cuánto' ocurre un fenómeno, pero las palabras en ATLAS.ti nos revelan 'por qué' y 'cómo' lo viven los protagonistas. El corazón de ATLAS.ti es la Unidad Hermenéutica, un proyecto digital que articula 4 componentes: 1) Los Documentos Primarios, que son las entrevistas transcritas; 2) Las Citas, que son fragmentos textuales seleccionados por su fuerza testimonial; 3) Los Códigos, que son etiquetas conceptuales que colocamos a esos fragmentos; y 4) Los Memos, donde el investigador anota sus reflexiones teóricas. En pantalla pueden explorar interactivamente cada uno de estos 4 componentes.", "metaphor": "Analizar con ATLAS.ti es como ser un detective: subrayas las pistas en las declaraciones de los testigos (citas), les pones un nombre (códigos) y conectas las pistas en tu pizarra de investigación.", "faq": "¿Cuál es la diferencia entre un código cuantitativo y uno cualitativo? Respuesta: En lo cuantitativo un código es un número asignado previamente; en lo cualitativo es una categoría conceptual que surge de la interpretación del discurso de las personas.", "pass": "En mi siguiente lámina explicaré la construcción de redes semánticas en ATLAS.ti y la triangulación metodológica."}, "16": {"speaker": "Rodrigo Arauz Mercado (Expositor 8 - Cont.)", "goal": "Explicar la construcción de redes semánticas en ATLAS.ti y cómo se logra la triangulación entre lo cualitativo y lo cuantitativo.", "script": "Una de las mayores virtudes de ATLAS.ti es permitir la codificación axial mediante Redes Semánticas. Una red semántica es un mapa conceptual visual donde conectamos las categorías teóricas con vínculos que tienen significado explícito: 'es causa de', 'está asociado con' o 'contradice'. Como observamos en la red interactiva en pantalla, los testimonios revelan que la 'Sobrecarga de trabajo' es causa de 'Estrés Docente', lo que impacta negativamente en el 'Rendimiento en el aula', mientras que el 'Apoyo familiar' actúa como un factor protector. Lo trascendental ante este jurado es la 'Triangulación Metodológica': no nos quedamos solo con los porcentajes de SPSS ni solo con las palabras de ATLAS.ti; unimos ambos enfoques para construir una investigación con rigor y profundidad.", "metaphor": "La triangulación metodológica es como la visión de los dos ojos humanos: un ojo te da la luz y la distancia (SPSS) y el otro te da la profundidad y los colores (ATLAS.ti); juntos te dan la realidad completa en 3D.", "faq": "¿Qué validez científica tiene una red semántica? Respuesta: Permite la trazabilidad conceptual: cualquier evaluador puede hacer clic en un nodo y leer directamente las citas textuales de los participantes que respaldan esa conexión teórica.", "pass": "Para finalizar nuestra defensa oral, paso a exponer junto a todo el equipo la síntesis y conclusiones metodológicas generales."}, "17": {"speaker": "Rodrigo Arauz Mercado y Equipo de Investigación", "goal": "Presentar la conclusión metodológica colegiada de alto impacto, sintetizando los 4 grandes aprendizajes y las referencias en APA 7.", "script": "Para concluir nuestra defensa formal ante el Licenciado Marcial Villarroel Siles, queremos sintetizar los 4 grandes aprendizajes metodológicos del ciclo: 1) En Tabulación aprendimos que el orden y el libro de códigos son los cimientos de la auditoría; 2) En Sistematización y Gráficos comprobamos que las frecuencias válidas y el respeto a las escalas evitan distorsiones visuales; 3) En Modelado y SPSS confirmamos que la significancia estadística p < 0.05 nos da certeza científica frente a la casualidad; y 4) En ATLAS.ti recuperamos el significado humano de las vivencias de los sujetos. Concluimos con la regla de oro metodológica: 'Los softwares computacionales procesan datos; pero es el investigador quien razona, contrasta y produce conocimiento científico al servicio de la sociedad'. Quedamos a su disposición. Muchas gracias.", "metaphor": "Investigar no es llenar casillas en una computadora; es responder preguntas reales para solucionar problemas reales de nuestra comunidad.", "faq": "¿Cómo se garantiza la calidad total de una investigación mixta? Respuesta: Mediante la consistencia metodológica: coherencia estricta entre el problema, los objetivos, la recolección, el procesamiento estadístico en SPSS y la interpretación teórica en ATLAS.ti.", "pass": "Concluimos formalmente la defensa oral del informe metodológico. ¡Muchas gracias por su atención!"}};
+    const slideGlossaries = {glossaries_json};
+    const presenterNotes = {notes_json};
 
     // Inicialización al cargar la ventana
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {{
       const urlParams = new URLSearchParams(window.location.search);
       const urlRoom = urlParams.get('room');
       if (urlRoom) roomCode = urlRoom;
@@ -2189,29 +2208,29 @@
 
       // Verificar si se abrió en modo control remoto móvil
       const isRemoteParam = urlParams.get('remote') === '1' || urlParams.get('role') === 'remote';
-      if (isRemoteParam) {
+      if (isRemoteParam) {{
         enableRemoteMode();
-      } else {
+      }} else {{
         setupEventListeners();
         renderGlossaryPillsAllSlides();
         renderOverviewGrid();
         switchSpssView('var');
         goToSlide(1);
-      }
-    });
+      }}
+    }});
 
     // Configuración de escuchas de teclado y botones
-    function setupEventListeners() {
+    function setupEventListeners() {{
       document.getElementById("btnPrev").addEventListener("click", () => changeSlide(-1));
       document.getElementById("btnNext").addEventListener("click", () => changeSlide(1));
       document.getElementById("btnNotesModal").addEventListener("click", toggleNotesModal);
       document.getElementById("btnOverviewModal").addEventListener("click", toggleOverviewModal);
       document.getElementById("btnFullscreen").addEventListener("click", toggleFullScreen);
 
-      document.addEventListener("keydown", (e) => {
+      document.addEventListener("keydown", (e) => {{
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-        switch (e.key) {
+        switch (e.key) {{
           case "ArrowRight":
           case "PageDown":
           case " ":
@@ -2249,34 +2268,34 @@
           case "Escape":
             closeAllModals();
             break;
-        }
-      });
-    }
+        }}
+      }});
+    }}
 
     // Navegación entre diapositivas
-    function changeSlide(direction) {
+    function changeSlide(direction) {{
       goToSlide(currentSlide + direction);
-    }
+    }}
 
-    function goToSlide(slideNum) {
+    function goToSlide(slideNum) {{
       if (slideNum < 1) slideNum = 1;
       if (slideNum > TOTAL_SLIDES) slideNum = TOTAL_SLIDES;
 
       // Remover clase active anterior
       document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
 
-      const targetSlide = document.getElementById(`slide-{slideNum}`);
-      if (targetSlide) {
+      const targetSlide = document.getElementById(`slide-{{slideNum}}`);
+      if (targetSlide) {{
         targetSlide.classList.add("active");
         currentSlide = slideNum;
         updateUI();
         broadcastSlideChange(currentSlide);
-      }
-    }
+      }}
+    }}
 
     // Actualización de interfaces
-    function updateUI() {
-      const currentSlideEl = document.getElementById(`slide-{currentSlide}`);
+    function updateUI() {{
+      const currentSlideEl = document.getElementById(`slide-{{currentSlide}}`);
       if (!currentSlideEl) return;
 
       const speaker = currentSlideEl.getAttribute("data-speaker") || "UPDS";
@@ -2286,264 +2305,264 @@
       // Barra superior
       document.getElementById("speakerPillNum").textContent = role;
       document.getElementById("speakerPillName").textContent = speaker;
-      document.getElementById("speakerPillSubtopic").textContent = subtopic ? `• {subtopic}` : "";
+      document.getElementById("speakerPillSubtopic").textContent = subtopic ? `• {{subtopic}}` : "";
 
       // Contador inferior
-      document.getElementById("slideCounterDisplay").innerHTML = `Diapositiva <span>{currentSlide}</span> de {TOTAL_SLIDES}`;
+      document.getElementById("slideCounterDisplay").innerHTML = `Diapositiva <span>{{currentSlide}}</span> de {{TOTAL_SLIDES}}`;
 
       // Habilitar/deshabilitar botones de navegación
       document.getElementById("btnPrev").disabled = currentSlide === 1;
       document.getElementById("btnNext").disabled = currentSlide === TOTAL_SLIDES;
 
       // Actualizar tarjeta en miniatura activa
-      document.querySelectorAll(".overview-card").forEach((card, idx) => {
-        if (idx + 1 === currentSlide) {
+      document.querySelectorAll(".overview-card").forEach((card, idx) => {{
+        if (idx + 1 === currentSlide) {{
           card.classList.add("current");
-        } else {
+        }} else {{
           card.classList.remove("current");
-        }
-      });
+        }}
+      }});
 
       // Si el modal de notas está abierto, actualizar su contenido
-      if (document.getElementById("notesModalOverlay").classList.contains("open")) {
+      if (document.getElementById("notesModalOverlay").classList.contains("open")) {{
         renderNotesModalContent();
-      }
-    }
+      }}
+    }}
 
     // Renderizar badges de glosario al pie de cada diapositiva
-    function renderGlossaryPillsAllSlides() {
-      for (let i = 1; i <= TOTAL_SLIDES; i++) {
-        const container = document.getElementById(`glossaryPills-{i}`);
-        if (container && slideGlossaries[i]) {
+    function renderGlossaryPillsAllSlides() {{
+      for (let i = 1; i <= TOTAL_SLIDES; i++) {{
+        const container = document.getElementById(`glossaryPills-{{i}}`);
+        if (container && slideGlossaries[i]) {{
           let html = '';
-          slideGlossaries[i].forEach(item => {
-            html += `<span class="glossary-term-chip" onclick="openSlideGlossaryModal()" title="{item.easy}">
-              <strong>{item.term}:</strong> {item.easy.substring(0, 48)}...
+          slideGlossaries[i].forEach(item => {{
+            html += `<span class="glossary-term-chip" onclick="openSlideGlossaryModal()" title="{{item.easy}}">
+              <strong>{{item.term}}:</strong> {{item.easy.substring(0, 48)}}...
             </span>`;
-          });
+          }});
           container.innerHTML = html;
-        }
-      }
-    }
+        }}
+      }}
+    }}
 
     // Modal de Glosario Dinámico de la Diapositiva
-    function openSlideGlossaryModal() {
+    function openSlideGlossaryModal() {{
       closeAllModals();
       const modal = document.getElementById("slideGlossaryModalOverlay");
-      document.getElementById("glossarySlideIndicator").textContent = `Diapositiva {currentSlide} de {TOTAL_SLIDES}`;
+      document.getElementById("glossarySlideIndicator").textContent = `Diapositiva {{currentSlide}} de {{TOTAL_SLIDES}}`;
 
       const list = slideGlossaries[currentSlide] || [];
       let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
-      list.forEach(item => {
+      list.forEach(item => {{
         html += `
           <div style="background: var(--bg-card); border: 1px solid var(--border-accent); border-radius: var(--radius-sm); padding: 12px 16px;">
             <div style="font-size: 1rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 4px;">
-              📖 {item.term}
+              📖 {{item.term}}
             </div>
             <div style="font-size: 0.9rem; color: #fff; line-height: 1.5;">
-              {item.easy}
+              {{item.easy}}
             </div>
           </div>
         `;
-      });
+      }});
       html += '</div>';
 
       document.getElementById("slideGlossaryModalBody").innerHTML = html;
       modal.classList.add("open");
-    }
+    }}
 
-    function closeSlideGlossaryModal() {
+    function closeSlideGlossaryModal() {{
       document.getElementById("slideGlossaryModalOverlay").classList.remove("open");
-    }
+    }}
 
     // Modal de Notas del Expositor (Tecla N)
-    function toggleNotesModal() {
+    function toggleNotesModal() {{
       const modal = document.getElementById("notesModalOverlay");
-      if (modal.classList.contains("open")) {
+      if (modal.classList.contains("open")) {{
         modal.classList.remove("open");
-      } else {
+      }} else {{
         closeAllModals();
         renderNotesModalContent();
         modal.classList.add("open");
-      }
-    }
+      }}
+    }}
 
-    function closeNotesModal() {
+    function closeNotesModal() {{
       document.getElementById("notesModalOverlay").classList.remove("open");
-    }
+    }}
 
-    function renderNotesModalContent() {
-      document.getElementById("notesSlideIndicator").textContent = `Diapositiva {currentSlide} de {TOTAL_SLIDES}`;
-      const note = presenterNotes[currentSlide] || {
+    function renderNotesModalContent() {{
+      document.getElementById("notesSlideIndicator").textContent = `Diapositiva {{currentSlide}} de {{TOTAL_SLIDES}}`;
+      const note = presenterNotes[currentSlide] || {{
         speaker: "Equipo UPDS",
         goal: "Presentación general",
         script: "Continúe con la exposición formal.",
         metaphor: "Proceda con el desarrollo metodológico.",
         faq: "Responda conforme al marco teórico.",
         pass: "Cedo la palabra a mi compañero."
-      };
+      }};
 
       const glossaryList = slideGlossaries[currentSlide] || [];
       let glossaryHtml = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-      glossaryList.forEach(item => {
-        glossaryHtml += `<div><strong style="color: #38bdf8;">{item.term}:</strong> {item.easy}</div>`;
-      });
+      glossaryList.forEach(item => {{
+        glossaryHtml += `<div><strong style="color: #38bdf8;">{{item.term}}:</strong> {{item.easy}}</div>`;
+      }});
       glossaryHtml += '</div>';
 
       const body = document.getElementById("notesModalBody");
       body.innerHTML = `
         <div class="note-section">
           <div class="note-section-title goal"><span>🎯</span> Objetivo Pedagógico de la Diapositiva</div>
-          <div class="note-content"><p>{note.goal}</p></div>
+          <div class="note-content"><p>{{note.goal}}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title script"><span>🗣️</span> Guion Verbal Paso a Paso (Para decir en voz alta)</div>
-          <div class="note-content"><p>{note.script}</p></div>
+          <div class="note-content"><p>{{note.script}}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title metaphor"><span>💡</span> Para Explicarlo Fácil (Metáfora o Ejemplo)</div>
-          <div class="note-content" style="color: #fde68a;"><p>{note.metaphor}</p></div>
+          <div class="note-content" style="color: #fde68a;"><p>{{note.metaphor}}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title faq"><span>❓</span> Pregunta Típica del Jurado y Cómo Responder</div>
-          <div class="note-content" style="color: #e9d5ff;"><p>{note.faq}</p></div>
+          <div class="note-content" style="color: #e9d5ff;"><p>{{note.faq}}</p></div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title glossary"><span>📖</span> Palabras Difíciles de esta Lámina Explicadas Fácil</div>
-          <div class="note-content">{glossaryHtml}</div>
+          <div class="note-content">{{glossaryHtml}}</div>
         </div>
 
         <div class="note-section">
           <div class="note-section-title pass"><span>🤝</span> Frase de Pase al Siguiente Compañero</div>
-          <div class="note-content" style="color: #fecdd3; font-style: italic;"><p>{note.pass}</p></div>
+          <div class="note-content" style="color: #fecdd3; font-style: italic;"><p>{{note.pass}}</p></div>
         </div>
       `;
-    }
+    }}
 
     // Modal de Miniaturas (Tecla O)
-    function toggleOverviewModal() {
+    function toggleOverviewModal() {{
       const modal = document.getElementById("overviewModalOverlay");
-      if (modal.classList.contains("open")) {
+      if (modal.classList.contains("open")) {{
         modal.classList.remove("open");
-      } else {
+      }} else {{
         closeAllModals();
         modal.classList.add("open");
-      }
-    }
+      }}
+    }}
 
-    function closeOverviewModal() {
+    function closeOverviewModal() {{
       document.getElementById("overviewModalOverlay").classList.remove("open");
-    }
+    }}
 
-    function renderOverviewGrid() {
+    function renderOverviewGrid() {{
       const grid = document.getElementById("overviewGrid");
       let html = '';
-      for (let i = 1; i <= TOTAL_SLIDES; i++) {
-        const slideEl = document.getElementById(`slide-{i}`);
+      for (let i = 1; i <= TOTAL_SLIDES; i++) {{
+        const slideEl = document.getElementById(`slide-{{i}}`);
         const titleEl = slideEl ? slideEl.querySelector(".slide-title") : null;
-        const titleText = titleEl ? titleEl.textContent : `Diapositiva {i}`;
+        const titleText = titleEl ? titleEl.textContent : `Diapositiva {{i}}`;
         const speaker = slideEl ? slideEl.getAttribute("data-speaker") : "UPDS";
 
         html += `
-          <div class="overview-card {i === currentSlide ? 'current' : ''}" onclick="goToSlide({i}); closeOverviewModal();">
-            <div class="overview-num">DIAPOSITIVA {i}</div>
-            <div class="overview-title">{titleText}</div>
-            <div class="overview-speaker">👤 {speaker}</div>
+          <div class="overview-card {{i === currentSlide ? 'current' : ''}}" onclick="goToSlide({{i}}); closeOverviewModal();">
+            <div class="overview-num">DIAPOSITIVA {{i}}</div>
+            <div class="overview-title">{{titleText}}</div>
+            <div class="overview-speaker">👤 {{speaker}}</div>
           </div>
         `;
-      }
+      }}
       grid.innerHTML = html;
-    }
+    }}
 
-    function closeAllModals() {
+    function closeAllModals() {{
       document.querySelectorAll(".modal-overlay").forEach(m => m.classList.remove("open"));
-    }
+    }}
 
-    function toggleFullScreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {});
-      } else {
-        if (document.exitFullscreen) {
+    function toggleFullScreen() {{
+      if (!document.fullscreenElement) {{
+        document.documentElement.requestFullscreen().catch(err => {{}});
+      }} else {{
+        if (document.exitFullscreen) {{
           document.exitFullscreen();
-        }
-      }
-    }
+        }}
+      }}
+    }}
 
     // ========================================================
     // SINCRONIZACIÓN Y CONTROL REMOTO MÓVIL
     // ========================================================
-    function initSyncChannel() {
-      try {
-        broadcastChannel = new BroadcastChannel(`upds_sync_{roomCode}`);
-        broadcastChannel.onmessage = (event) => {
+    function initSyncChannel() {{
+      try {{
+        broadcastChannel = new BroadcastChannel(`upds_sync_{{roomCode}}`);
+        broadcastChannel.onmessage = (event) => {{
           const data = event.data;
-          if (data && data.type === 'NAVIGATE') {
+          if (data && data.type === 'NAVIGATE') {{
             onRemoteNavigate(data.slide);
-          }
-        };
-      } catch (e) {}
+          }}
+        }};
+      }} catch (e) {{}}
 
-      window.addEventListener("storage", (e) => {
-        if (e.key === `upds_slide_{roomCode}` && e.newValue) {
+      window.addEventListener("storage", (e) => {{
+        if (e.key === `upds_slide_{{roomCode}}` && e.newValue) {{
           const s = parseInt(e.newValue, 10);
           if (!isNaN(s)) onRemoteNavigate(s);
-        }
-      });
+        }}
+      }});
 
       // Conexión a WebSocket MQTT seguro para GitHub Pages
-      try {
+      try {{
         const brokerUrl = `wss://broker.emqx.io:8084/mqtt`;
         syncWs = new WebSocket(brokerUrl);
-        syncWs.onopen = () => {
+        syncWs.onopen = () => {{
           setRemoteStatusOnline(true);
-        };
+        }};
         syncWs.onclose = () => setRemoteStatusOnline(false);
         syncWs.onerror = () => setRemoteStatusOnline(false);
-      } catch (e) {}
-    }
+      }} catch (e) {{}}
+    }}
 
-    function setRemoteStatusOnline(online) {
+    function setRemoteStatusOnline(online) {{
       isRemoteConnected = online;
       const ind = document.getElementById("remoteStatusIndicator");
-      if (ind) {
+      if (ind) {{
         ind.className = online ? "remote-live-dot" : "remote-live-dot waiting";
-      }
-    }
+      }}
+    }}
 
-    function broadcastSlideChange(slideNum) {
-      try {
-        localStorage.setItem(`upds_slide_{roomCode}`, slideNum.toString());
-        if (broadcastChannel) {
-          broadcastChannel.postMessage({ type: 'NAVIGATE', slide: slideNum });
-        }
-      } catch (e) {}
-    }
+    function broadcastSlideChange(slideNum) {{
+      try {{
+        localStorage.setItem(`upds_slide_{{roomCode}}`, slideNum.toString());
+        if (broadcastChannel) {{
+          broadcastChannel.postMessage({{ type: 'NAVIGATE', slide: slideNum }});
+        }}
+      }} catch (e) {{}}
+    }}
 
-    function onRemoteNavigate(slideNum) {
-      if (document.body.classList.contains("remote-mode")) {
+    function onRemoteNavigate(slideNum) {{
+      if (document.body.classList.contains("remote-mode")) {{
         currentSlide = slideNum;
         renderMobileRemoteView(currentSlide);
-      } else {
+      }} else {{
         goToSlide(slideNum);
-      }
-    }
+      }}
+    }}
 
     // Modo Remoto Celular
-    function enableRemoteMode() {
+    function enableRemoteMode() {{
       document.body.classList.add("remote-mode");
       renderMobileRemoteView(currentSlide);
-    }
+    }}
 
-    function exitRemoteMode() {
+    function exitRemoteMode() {{
       document.body.classList.remove("remote-mode");
       goToSlide(currentSlide);
-    }
+    }}
 
-    function navigateRemote(delta) {
+    function navigateRemote(delta) {{
       if (navigator.vibrate) navigator.vibrate(30);
       let next = currentSlide + delta;
       if (next < 1) next = 1;
@@ -2551,152 +2570,152 @@
       currentSlide = next;
       broadcastSlideChange(currentSlide);
       renderMobileRemoteView(currentSlide);
-    }
+    }}
 
-    function renderMobileRemoteView(slideNum) {
-      const slideEl = document.getElementById(`slide-{slideNum}`);
-      const title = slideEl ? slideEl.querySelector(".slide-title").textContent : `Diapositiva {slideNum}`;
+    function renderMobileRemoteView(slideNum) {{
+      const slideEl = document.getElementById(`slide-{{slideNum}}`);
+      const title = slideEl ? slideEl.querySelector(".slide-title").textContent : `Diapositiva {{slideNum}}`;
       const speaker = slideEl ? slideEl.getAttribute("data-speaker") : "UPDS";
-      const note = presenterNotes[slideNum] || {};
+      const note = presenterNotes[slideNum] || {{}};
 
-      document.getElementById("mobileSlideNumIndicator").textContent = `DIAPOSITIVA {slideNum} DE {TOTAL_SLIDES}`;
+      document.getElementById("mobileSlideNumIndicator").textContent = `DIAPOSITIVA {{slideNum}} DE {{TOTAL_SLIDES}}`;
       document.getElementById("mobileSlideTitleDisplay").textContent = title;
       document.getElementById("mobileSpeakerDisplay").textContent = speaker;
 
       // Glosario en el celular
       const glossaryList = slideGlossaries[slideNum] || [];
       let glossaryHtml = '';
-      glossaryList.forEach(item => {
+      glossaryList.forEach(item => {{
         glossaryHtml += `
           <div class="mobile-glossary-item">
-            <strong>📖 {item.term}:</strong> {item.easy}
+            <strong>📖 {{item.term}}:</strong> {{item.easy}}
           </div>
         `;
-      });
+      }});
       document.getElementById("mobileGlossaryContent").innerHTML = glossaryHtml;
 
-      document.getElementById("mobileScriptContent").innerHTML = `<p>{note.script || "Continúe con la defensa."}</p>`;
-      document.getElementById("mobileMetaphorContent").innerHTML = `<p>{note.metaphor || "Explique con claridad los ejemplos."}</p>`;
-      document.getElementById("mobileFaqContent").innerHTML = `<p>{note.faq || "Responda con seguridad técnica."}</p>`;
-      document.getElementById("mobilePassContent").innerHTML = `<p>{note.pass || "Cedo la palabra."}</p>`;
-    }
+      document.getElementById("mobileScriptContent").innerHTML = `<p>{{note.script || "Continúe con la defensa."}}</p>`;
+      document.getElementById("mobileMetaphorContent").innerHTML = `<p>{{note.metaphor || "Explique con claridad los ejemplos."}}</p>`;
+      document.getElementById("mobileFaqContent").innerHTML = `<p>{{note.faq || "Responda con seguridad técnica."}}</p>`;
+      document.getElementById("mobilePassContent").innerHTML = `<p>{{note.pass || "Cedo la palabra."}}</p>`;
+    }}
 
     // Modal de Conexión Celular (QR)
-    function openRemoteModal() {
+    function openRemoteModal() {{
       closeAllModals();
       const modal = document.getElementById("remoteModalOverlay");
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
+      const remoteUrl = `{{currentUrl}}?remote=1&room={{roomCode}}`;
 
       document.getElementById("displayRoomCode").textContent = roomCode;
       document.getElementById("remoteDirectUrl").textContent = remoteUrl;
       document.getElementById("qrCodeContainer").innerHTML = generateQrSvg(remoteUrl, 200);
 
       modal.classList.add("open");
-    }
+    }}
 
-    function closeRemoteModal() {
+    function closeRemoteModal() {{
       document.getElementById("remoteModalOverlay").classList.remove("open");
-    }
+    }}
 
-    function copyRemoteUrl() {
+    function copyRemoteUrl() {{
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
-      navigator.clipboard.writeText(remoteUrl).then(() => {
+      const remoteUrl = `{{currentUrl}}?remote=1&room={{roomCode}}`;
+      navigator.clipboard.writeText(remoteUrl).then(() => {{
         alert("Enlace copiado al portapapeles. Péguelo en su celular.");
-      }).catch(() => {
+      }}).catch(() => {{
         prompt("Copie este enlace en su celular:", remoteUrl);
-      });
-    }
+      }});
+    }}
 
-    function openPresenterWindow() {
+    function openPresenterWindow() {{
       const currentUrl = window.location.origin + window.location.pathname;
-      const remoteUrl = `{currentUrl}?remote=1&room={roomCode}`;
+      const remoteUrl = `{{currentUrl}}?remote=1&room={{roomCode}}`;
       window.open(remoteUrl, 'PresenterConsole', 'width=420,height=750');
       closeRemoteModal();
-    }
+    }}
 
     // Generador de Código QR SVG Autónomo (Sin librerías externas)
-    function generateQrSvg(text, size = 180) {
+    function generateQrSvg(text, size = 180) {{
       const modules = 25;
       const cellSize = size / modules;
-      let svg = `<svg width="{size}" height="{size}" viewBox="0 0 {size} {size}" xmlns="http://www.w3.org/2000/svg">`;
-      svg += `<rect width="{size}" height="{size}" fill="#ffffff"/>`;
+      let svg = `<svg width="{{size}}" height="{{size}}" viewBox="0 0 {{size}} {{size}}" xmlns="http://www.w3.org/2000/svg">`;
+      svg += `<rect width="{{size}}" height="{{size}}" fill="#ffffff"/>`;
 
       let hash = 0;
-      for (let i = 0; i < text.length; i++) {
+      for (let i = 0; i < text.length; i++) {{
         hash = ((hash << 5) - hash) + text.charCodeAt(i);
         hash |= 0;
-      }
+      }}
 
-      for (let r = 0; r < modules; r++) {
-        for (let c = 0; c < modules; c++) {
+      for (let r = 0; r < modules; r++) {{
+        for (let c = 0; c < modules; c++) {{
           const isCornerFinder =
             (r < 7 && c < 7) ||
             (r < 7 && c >= modules - 7) ||
             (r >= modules - 7 && c < 7);
 
           let isBlack = false;
-          if (isCornerFinder) {
+          if (isCornerFinder) {{
             const inR = (r < 7) ? r : (modules - 1 - r);
             const inC = (c < 7) ? c : (modules - 1 - c);
             if (inR === 0 || inR === 6 || inC === 0 || inC === 6) isBlack = true;
             else if (inR >= 2 && inR <= 4 && inC >= 2 && inC <= 4) isBlack = true;
             else isBlack = false;
-          } else {
+          }} else {{
             const seed = (r * 31 + c * 17 + hash) & 0xfffff;
             isBlack = (seed % 3) === 0;
-          }
+          }}
 
-          if (isBlack) {
-            svg += `<rect x="{(c * cellSize).toFixed(1)}" y="{(r * cellSize).toFixed(1)}" width="{cellSize.toFixed(1)}" height="{cellSize.toFixed(1)}" fill="#000000"/>`;
-          }
-        }
-      }
+          if (isBlack) {{
+            svg += `<rect x="{{(c * cellSize).toFixed(1)}}" y="{{(r * cellSize).toFixed(1)}}" width="{{cellSize.toFixed(1)}}" height="{{cellSize.toFixed(1)}}" fill="#000000"/>`;
+          }}
+        }}
+      }}
       svg += `</svg>`;
       return svg;
-    }
+    }}
 
     // ========================================================
     // INTERACTIVIDADES DE LAS DIAPOSITIVAS
     // ========================================================
-    function highlightMatrixRow(rowNum) {
-      for (let i = 1; i <= 4; i++) {
-        const r = document.getElementById(`mat-row-{i}`);
+    function highlightMatrixRow(rowNum) {{
+      for (let i = 1; i <= 4; i++) {{
+        const r = document.getElementById(`mat-row-{{i}}`);
         if (r) r.style.background = (i === rowNum) ? "rgba(37, 99, 235, 0.35)" : "";
-      }
-      const info = {
+      }}
+      const info = {{
         1: "Sujeto 1 (#101): Varón de 28 años con satisfacción 4 (Alta). Fila individual completa.",
         2: "Sujeto 2 (#102): Mujer de 34 años con satisfacción 5 (Muy Alta). Fila individual completa.",
         3: "Sujeto 3 (#103): Mujer de 22 años con satisfacción 3 (Media). Fila individual completa.",
         4: "Sujeto 4 (#104): Varón de 41 años con satisfacción 5 (Muy Alta). Fila individual completa."
-      };
-      document.getElementById("matrixInspectorFeedback").innerHTML = `<strong>Fila Seleccionada:</strong> {info[rowNum]}`;
-    }
+      }};
+      document.getElementById("matrixInspectorFeedback").innerHTML = `<strong>Fila Seleccionada:</strong> {{info[rowNum]}}`;
+    }}
 
-    function highlightInterval(intNum) {
-      for (let i = 1; i <= 6; i++) {
-        const r = document.getElementById(`row-int-{i}`);
+    function highlightInterval(intNum) {{
+      for (let i = 1; i <= 6; i++) {{
+        const r = document.getElementById(`row-int-{{i}}`);
         if (r) r.style.background = (i === intNum) ? "rgba(6, 182, 212, 0.25)" : "";
-      }
-      const details = {
+      }}
+      const details = {{
         1: "Intervalo 51 a 55 puntos: 8 docentes. Notas aprobatorias iniciales.",
         2: "Intervalo 56 a 60 puntos: 16 docentes (Clase Modal). Aquí se concentra la mayor cantidad de evaluados.",
         3: "Intervalo 61 a 65 puntos: 11 docentes. Desempeño promedio intermedio.",
         4: "Intervalo 66 a 70 puntos: 14 docentes. Casi el 78% del curso tiene 70 puntos o menos.",
         5: "Intervalo 71 a 75 puntos: 9 docentes. Desempeño destacado.",
         6: "Intervalo 76 a 85 puntos: 5 docentes. El tramo de calificaciones de excelencia."
-      };
-      document.getElementById("intervalExplanationBox").innerHTML = `<strong>Intervalo Seleccionado:</strong> {details[intNum]}`;
-    }
+      }};
+      document.getElementById("intervalExplanationBox").innerHTML = `<strong>Intervalo Seleccionado:</strong> {{details[intNum]}}`;
+    }}
 
-    function switchSpssView(view) {
+    function switchSpssView(view) {{
       const btnVar = document.getElementById("btnSpssViewVar");
       const btnData = document.getElementById("btnSpssViewData");
       const box = document.getElementById("spssExplanationBox");
       const table = document.getElementById("spssTableContent");
 
-      if (view === 'var') {
+      if (view === 'var') {{
         btnVar.classList.add("active");
         btnData.classList.remove("active");
         table.innerHTML = `
@@ -2710,7 +2729,7 @@
           </tbody>
         `;
         box.innerHTML = `<strong>Vista de Variables activa:</strong> Aquí es donde se bautizan las variables y se definen las etiquetas para que la computadora sepa qué representa cada número.`;
-      } else {
+      }} else {{
         btnData.classList.add("active");
         btnVar.classList.remove("active");
         table.innerHTML = `
@@ -2724,22 +2743,22 @@
           </tbody>
         `;
         box.innerHTML = `<strong>Vista de Datos activa:</strong> Aquí se observan las respuestas reales de los participantes. Cada fila es un docente y cada columna es una variable.`;
-      }
-    }
+      }}
+    }}
 
-    function showHuDetail(num) {
-      const info = {
+    function showHuDetail(num) {{
+      const info = {{
         1: "Documentos Primarios: Las fuentes directas (audios de entrevistas o diarios de campo) resguardados intactos.",
         2: "Citas (Quotations): Los fragmentos textuales seleccionados por su relevancia; son la evidencia empírica directa.",
         3: "Códigos: Etiquetas conceptuales que el investigador pega a las citas (ej. 'Sobrecarga laboral').",
         4: "Memos Analíticos: El diario reflexivo donde el investigador anota hipótesis y dudas teóricas."
-      };
-      document.getElementById("huDetailBox").innerHTML = `<strong>Componente {num}:</strong> {info[num]}`;
-    }
+      }};
+      document.getElementById("huDetailBox").innerHTML = `<strong>Componente {{num}}:</strong> {{info[num]}}`;
+    }}
 
-    function inspectNetworkNode(node) {
+    function inspectNetworkNode(node) {{
       const box = document.getElementById("networkNodeDetail");
-      switch (node) {
+      switch (node) {{
         case 'estres':
           box.innerHTML = `<strong>Nodo Central (Estrés Docente):</strong> Es el problema axial. Se origina por la sobrecarga y deteriora el clima en el aula.`;
           break;
@@ -2752,8 +2771,15 @@
         case 'apoyo':
           box.innerHTML = `<strong>Factor Protector:</strong> Apoyo Familiar <code>mitiga</code> el Estrés Docente. Funciona como un amortiguador psicosocial que protege al docente.`;
           break;
-      }
-    }
+      }}
+    }}
   </script>
 </body>
 </html>
+'''
+    with open("index.html", "w", encoding="utf-8") as f:
+        f.write(html)
+    print("Successfully built perfected index.html!")
+
+if __name__ == '__main__':
+    generate_index_html()
